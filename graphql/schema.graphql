@@ -1,0 +1,14 @@
+type User {
+  id: Int!
+  name: String!
+  email: String!
+  pw: String!
+}
+
+type Query {
+  getAllUser: [User]!
+}
+
+type Mutation {
+  addUser(name: String!, email: String!, pw: String!): User!
+}
