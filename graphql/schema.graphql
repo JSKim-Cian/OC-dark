@@ -5,8 +5,17 @@ type User {
   pw: String!
 }
 
+type Community {
+  id: Int!
+  title: String!
+  mainGenre: String! # 주 장르. 여러 장르가 섞일 수 없음.
+  smallGenre: String! # 소 장르. 유저가 입력한 소장르.
+  type: Int! # 커뮤니티 유형. 1, 2, 3 순서대로 글, 그림, 복합.
+}
+
 type Query {
   getAllUser: [User]!
+  getComu: [Community]!
 }
 
 type Mutation {

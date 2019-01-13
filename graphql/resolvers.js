@@ -1,8 +1,9 @@
-import { getAllUser, addUser } from './db'
+import { getAllUser, addUser, getComu } from './db'
 
 const resolvers = {
   Query: {
-    getAllUser: () => getAllUser()
+    getAllUser: () => getAllUser(),
+    getComu: () => getComu()
   },
   Mutation: {
     addUser: (_, { name, email, pw }) => addUser(name, email, pw)

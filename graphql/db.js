@@ -25,7 +25,40 @@ const user = [
   }
 ]
 
+const own_comu = [
+  {
+    id: 1,
+    title: '놀러오세요, 겨울의 숲 2기',
+    mainGenre: '일상',
+    smallGenre: '힐링, 개그',
+    type: 2
+  },
+  {
+    id: 2,
+    title: '라온하제 3기',
+    mainGenre: '일상',
+    smallGenre: '힐링/학원',
+    type: 3
+  },
+  {
+    id: 3,
+    title: '우리들은 인간이 싫어',
+    mainGenre: '일상',
+    smallGenre: '시리어스',
+    type: 3
+  },
+  {
+    id: 4,
+    title: '기억의 잔재',
+    mainGenre: '판타지',
+    smallGenre: '시리 천악',
+    type: 3
+  }
+]
+
 export const getAllUser = () => user;
+
+export const getComu = () => own_comu;
 
 export const addUser = (name, email, pw) => {
   const newUser = {
