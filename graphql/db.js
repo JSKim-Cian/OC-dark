@@ -70,3 +70,12 @@ export const addUser = (name, email, pw) => {
   user.push(newUser)
   return newUser
 }
+
+export const loginUser = (email, pw) => {
+  const result = user.filter(account => account.email === email && account.pw === pw)
+  if (result) {
+    return result[0]
+  } else {
+    return false
+  }
+}
