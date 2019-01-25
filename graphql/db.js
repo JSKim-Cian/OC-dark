@@ -73,7 +73,7 @@ export const addUser = (name, email, pw) => {
 
 export const loginUser = (email, pw) => {
   const result = user.filter(account => account.email === email && account.pw === pw)
-  if (result) {
+  if (result.length !== 0) {
     return result[0]
   } else {
     return false
