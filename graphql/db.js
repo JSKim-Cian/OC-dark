@@ -3,25 +3,25 @@ const user = [
     id: 1,
     name: 'James',
     email: 'James@gmail.com',
-    pw: 'test'
+    pw: '$2a$12$Al61rlwAkaV2j8V5MGtHoOrcfJHE12bh7AXzXoTS5RXT7OWdL7XAi'
   },
   {
     id: 2,
     name: 'Chris',
     email: 'Chris@gmail.com',
-    pw: 'test'
+    pw: '$2a$12$Al61rlwAkaV2j8V5MGtHoOrcfJHE12bh7AXzXoTS5RXT7OWdL7XAi'
   },
   {
     id: 3,
     name: 'Kely',
     email: 'kely@gmail.com',
-    pw: 'test'
+    pw: "$2b$12$lruN0cnnJjhETgLv3IbT6uNsnRi.BB3KYthcIXBbv5O.DZNZdQSAW"
   },
   {
     id: 4,
     name: 'Mac',
     email: 'Mac@gmail.com',
-    pw: 'test'
+    pw: '$2a$12$Al61rlwAkaV2j8V5MGtHoOrcfJHE12bh7AXzXoTS5RXT7OWdL7XAi'
   }
 ]
 
@@ -56,26 +56,42 @@ const own_comu = [
   }
 ]
 
+import { token, encryptor } from '../utils'
+
 export const getAllUser = () => user;
 
 export const getComu = () => own_comu;
 
-export const addUser = (name, email, pw) => {
+// online hash.js emulator
+// http://www.xorbin.com/tools/sha256-hash-calculator
+
+// online bcrypt emulator (use 12 rounds)
+// https://www.dailycred.com/article/bcrypt-calculator
+
+export const addUser = async (name, email, pw) => {
   const newUser = {
     id: `${user.length + 1}`,
     name,
     email,
-    pw
+    pw: await encryptor.encrypt({ digest: pw })
   }
   user.push(newUser)
   return newUser
 }
 
-export const loginUser = (email, pw) => {
-  const result = user.filter(account => account.email === email && account.pw === pw)
+export const loginUser = async (email, pw) => {
+  const result = user.filter(account => account.email === email)
   if (result.length !== 0) {
-    return result[0]
-  } else {
-    return false
+    const user = result[0]
+    if (user) {
+      const password = await encryptor.verify({ digest: pw }, user.pw)
+      if (password) {
+        const accessToken = token.generateAccessJwt(user.name) // user.name은 not null이어야함.
+        const refreshToken = token.generateRefreshJwt(user.name)
+
+        return [{ user, token: { accessToken, refreshToken } }]
+      }
+    }
   }
+  return null
 }
