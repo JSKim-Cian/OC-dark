@@ -1,6 +1,6 @@
 type User {
   id: Int!
-  name: String!
+  username: String!
   email: String!
   pw: String!
 }
@@ -10,9 +10,24 @@ type Token {
   refreshToken: String!
 }
 
+type File {
+  id: ID!
+  path: String!
+  filename: String!
+  mimetype: String!
+  encoding: String!
+}
+
 type login {
   user: User!
   token: Token!
+}
+
+type Character {
+  id: Int!
+  userid: Int!
+  name: String! # 캐릭터명
+  characterLink: [File]! # server에 저장된 이미지 경로 리스트.
 }
 
 type Community {
@@ -24,18 +39,29 @@ type Community {
 }
 
 type ReissuanceTokens {
+  id: Int!
   username: String!
   accessToken: String!
   refreshToken: String!
 }
 
+type UserCharacter {
+  user: User!
+  characters: [Character!]
+}
+
+scalar Upload
+
 type Query {
-  getAllUser: [User]!
   getComu: [Community]!
+  getMyInfo(userId: Int!): UserCharacter!
+  uploads: [File]
 }
 
 type Mutation {
-  addUser(name: String!, email: String!, pw: String!): User!
+  addUser(username: String!, email: String!, pw: String!): User!
   loginUser(email: String!, pw: String!): [login!]
   reissuanceToken(refreshToken: String!): ReissuanceTokens!
+  singleUpload (img: Upload!): File!
+  multipleUpload (files: [Upload!]!): [File!]!
 }

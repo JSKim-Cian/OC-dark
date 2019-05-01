@@ -5,12 +5,13 @@
 import jwt from 'jsonwebtoken'
 const JWT_SECRET = 'vWsBwvuJ4phW89bh'
 
-const generateAccessJwt = (name) => {
-  const accessToken = jwt.sign({ username: name }, JWT_SECRET, {
+// Access token generator
+const generateAccessJwt = (user) => {
+  const accessToken = jwt.sign({ id: user.id, username: user.username }, JWT_SECRET, {
     algorithm: 'HS256',
     expiresIn: 86400 * 1,
     issuer: 'ownCharater',
-    subject: name
+    subject: user.username
   })
 
   jwt.verify(accessToken, JWT_SECRET, (err, data) => {
@@ -20,12 +21,13 @@ const generateAccessJwt = (name) => {
   return accessToken
 }
 
-const generateRefreshJwt = (name) => {
-  const refreshToken = jwt.sign({ username: name }, JWT_SECRET, {
+// Refresh token generator
+const generateRefreshJwt = (user) => {
+  const refreshToken = jwt.sign({ id: user.id, username: user.username }, JWT_SECRET, {
     algorithm: 'HS256',
     expiresIn: 86400 * 3,
     issuer: 'ownCharater',
-    subject: name
+    subject: user.username
   })
 
   jwt.verify(refreshToken, JWT_SECRET, (err, data) => {
@@ -35,8 +37,9 @@ const generateRefreshJwt = (name) => {
   return refreshToken
 }
 
-const reissuanceToken = (refreshToken) => {
-  const logState = jwt.verify(refreshToken, JWT_SECRET, (err, data) => {
+// Token reissue function
+const reissuanceToken = async (refreshToken) => {
+  const loginState = await jwt.verify(refreshToken, JWT_SECRET, (err, data) => {
     if (!err) {
       return data
     } else {
@@ -44,8 +47,8 @@ const reissuanceToken = (refreshToken) => {
     }
   })
 
-  if (logState) {
-		return { username: logState.username, accessToken: generateAccessJwt(logState.username), refreshToken }
+  if (loginState) {
+		return { id: loginState.id, username: loginState.username, accessToken: await generateAccessJwt(loginState), refreshToken }
   }
 }
 
